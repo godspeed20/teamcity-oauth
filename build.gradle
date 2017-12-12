@@ -31,7 +31,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    teamcityVersion = '2017.1'
+    teamcityVersion = '2017.2'
     teamcityDir = "$rootDir/servers/TeamCity-${teamcityVersion}"
     teamcityDataDir = "$rootDir/data/"
     teamcityJavaHome = System.properties['java.home']
@@ -56,10 +56,10 @@ teamcity {
             name = project.name
             displayName = project.name
             version = project.version
-            vendorName = 'wielgolaski.me'
-            description = 'oAuth2 authentication plugin'
-            downloadUrl = 'https://github.com/pwielgolaski/teamcity-oauth/'
-            email = 'pwielgolaski@gmail.com'
+            vendorName = 'pavelm.me'
+            description = 'Fork of oAuth2 authentication plugin'
+            downloadUrl = 'https://github.com/pavelmigolinets/teamcity-oauth'
+            email = 'pavelm@wix.com'
         }
     }
     environments {
