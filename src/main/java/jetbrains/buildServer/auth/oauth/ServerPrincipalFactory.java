@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-
 public class ServerPrincipalFactory {
 
     private static final Logger LOG = Logger.getLogger(ServerPrincipalFactory.class);
@@ -24,7 +23,7 @@ public class ServerPrincipalFactory {
 
     @NotNull
     public Optional<ServerPrincipal> getServerPrincipal(@NotNull final OAuthUser user, boolean allowCreatingNewUsersByLogin) {
-        Optional<ServerPrincipal> existingPrincipal = findExistingPrincipal(user.getId());
+        Optional<ServerPrincipal> existingPrincipal = findExistingPrincipal(user);
         if (existingPrincipal.isPresent()) {
             LOG.info("Use existing user: " + user.getId());
             return existingPrincipal;
@@ -41,10 +40,17 @@ public class ServerPrincipalFactory {
     }
 
     @Nullable
-    private Optional<ServerPrincipal> findExistingPrincipal(@NotNull final String userName) {
+    private Optional<ServerPrincipal> findExistingPrincipal(OAuthUser oAuthUser) {
         try {
-            final SUser user = userModel.findUserByUsername(userName, PluginConstants.ID_USER_PROPERTY_KEY);
-            return Optional.ofNullable(user).map(u -> new ServerPrincipal(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.getUsername()));
+            final Optional<SUser> user = Optional.ofNullable(userModel.findUserByUsername(oAuthUser.getId(),
+                                                                                          PluginConstants
+                                                                                                  .ID_USER_PROPERTY_KEY));
+            if (user.isPresent()) {
+                if (user.get().getName() == null || !user.get().getName().equals(oAuthUser.getName())) {
+                    user.get().updateUserAccount(oAuthUser.getId(), oAuthUser.getName(), oAuthUser.getEmail());
+                }
+            }
+            return user.map(u -> new ServerPrincipal(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.get().getUsername()));
         } catch (InvalidUsernameException e) {
             // ignore it
             return Optional.empty();
