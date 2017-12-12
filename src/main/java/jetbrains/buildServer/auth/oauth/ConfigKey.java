@@ -1,6 +1,5 @@
 package jetbrains.buildServer.auth.oauth;
 
-
 public enum ConfigKey {
     preset,
     authorizeEndpoint,

@@ -7,12 +7,12 @@ import spock.lang.Specification
 
 class AuthenticationSchemePropertiesTest extends Specification {
 
-    Map<String, String> configuration = [:];
-    AuthenticationSchemeProperties schemeProperties;
+    Map<String, String> configuration = [:]
+    AuthenticationSchemeProperties schemeProperties
 
     def setup() {
         AuthModule authModule = Mock() {
-            getProperties() >> configuration;
+            getProperties() >> configuration
         }
         LoginConfiguration loginConfiguration = Mock() {
             getConfiguredAuthModules(_) >> [authModule]

@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-
 public class OAuthAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
 
     private static final Logger LOG = Logger.getLogger(OAuthAuthenticationScheme.class);
@@ -93,7 +92,7 @@ public class OAuthAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
         if (principal.isPresent()) {
             LOG.debug("Request authenticated. Determined user " + principal.get().getName());
             return HttpAuthenticationResult.authenticated(principal.get(), true)
-                    .withRedirect("/");
+                                           .withRedirect("/");
         } else {
             return sendUnauthorizedRequest(request, response, "Unauthenticated since user could not be found or created.");
         }

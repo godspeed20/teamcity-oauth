@@ -19,8 +19,8 @@ class OAuthClientTest extends Specification {
     @Shared
     MockWebServer server = new MockWebServer()
 
-    OAuthClient client;
-    def schemeProperties;
+    OAuthClient client
+    def schemeProperties
 
     def setupSpec() {
         server.start()
@@ -52,8 +52,8 @@ class OAuthClientTest extends Specification {
         schemeProperties.getScope() >> scope
         def state = "state"
         when:
-        def redirectUrl = client.getRedirectUrl(state);
-        def uri = UriComponentsBuilder.fromHttpUrl(redirectUrl).build();
+        def redirectUrl = client.getRedirectUrl(state)
+        def uri = UriComponentsBuilder.fromHttpUrl(redirectUrl).build()
         then:
         uri.host == 'localhost'
         uri.path == '/auth'

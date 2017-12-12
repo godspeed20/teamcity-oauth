@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class LoginViaOAuthLoginPageExtension extends SimplePageExtension {
 
-
     @NotNull
     private final AuthenticationSchemeProperties schemeProperties;
 
@@ -19,9 +18,9 @@ public class LoginViaOAuthLoginPageExtension extends SimplePageExtension {
                                            @NotNull final PluginDescriptor pluginDescriptor,
                                            @NotNull final AuthenticationSchemeProperties schemeProperties) {
         super(pagePlaces,
-                PlaceId.LOGIN_PAGE,
-                LoginViaOAuthLoginPageExtension.class.getName(),
-                pluginDescriptor.getPluginResourcesPath(PluginConstants.Web.LOGIN_EXTENSION_PAGE));
+              PlaceId.LOGIN_PAGE,
+              LoginViaOAuthLoginPageExtension.class.getName(),
+              pluginDescriptor.getPluginResourcesPath(PluginConstants.Web.LOGIN_EXTENSION_PAGE));
         this.schemeProperties = schemeProperties;
         register();
     }

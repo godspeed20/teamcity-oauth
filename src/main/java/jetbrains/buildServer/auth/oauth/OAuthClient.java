@@ -18,7 +18,7 @@ import java.util.Map;
 public class OAuthClient {
 
     private final AuthenticationSchemeProperties properties;
-    private static final Logger log = Logger.getLogger(OAuthClient.class);
+    private static final Logger LOG = Logger.getLogger(OAuthClient.class);
     private final Map<Boolean, OkHttpClient> httpClients = new HashMap<>();
 
     public OAuthClient(AuthenticationSchemeProperties properties) {
@@ -31,16 +31,15 @@ public class OAuthClient {
 
     public String getRedirectUrl(String state) {
         HttpUrl.Builder builder = HttpUrl.parse(properties.getAuthorizeEndpoint())
-                .newBuilder()
-                .addQueryParameter("response_type", "code")
-                .addQueryParameter("client_id", properties.getClientId())
-                .addQueryParameter("state", state)
-                .addQueryParameter("redirect_uri", properties.getRootUrl());
+                                         .newBuilder()
+                                         .addQueryParameter("response_type", "code")
+                                         .addQueryParameter("client_id", properties.getClientId())
+                                         .addQueryParameter("state", state)
+                                         .addQueryParameter("redirect_uri", properties.getRootUrl());
         if (StringUtil.isNotEmpty(properties.getScope())) {
             builder.addQueryParameter("scope", properties.getScope());
         }
         return builder.build().toString();
-
     }
 
     public String getAccessToken(String code) throws IOException {
@@ -65,10 +64,10 @@ public class OAuthClient {
     public OAuthUser getUserData(String token) throws IOException {
         Request request = new Request.Builder()
                 .url(properties.getUserEndpoint())
-                .addHeader("Authorization","Bearer " + token)
+                .addHeader("Authorization", "Bearer " + token)
                 .build();
         String response = getHttpClient().newCall(request).execute().body().string();
-        log.debug("Fetched user data: " + response);
+        LOG.debug("Fetched user data: " + response);
         return new OAuthUser((Map) JSONValue.parse(response));
     }
 }

@@ -30,24 +30,24 @@ public class PluginConfiguration {
 
     @Bean
     public LoginViaOAuthController loginController(WebControllerManager webManager,
-                                            AuthorizationInterceptor authInterceptor,
-                                            AuthenticationSchemeProperties schemeProperties,
-                                            OAuthClient authClient) {
+                                                   AuthorizationInterceptor authInterceptor,
+                                                   AuthenticationSchemeProperties schemeProperties,
+                                                   OAuthClient authClient) {
         return new LoginViaOAuthController(webManager, authInterceptor, schemeProperties, authClient);
     }
 
     @Bean
     public LoginViaOAuthLoginPageExtension loginPageExtension(PagePlaces pagePlaces,
-                                                       PluginDescriptor pluginDescriptor,
-                                                       AuthenticationSchemeProperties schemeProperties) {
+                                                              PluginDescriptor pluginDescriptor,
+                                                              AuthenticationSchemeProperties schemeProperties) {
         return new LoginViaOAuthLoginPageExtension(pagePlaces, pluginDescriptor, schemeProperties);
     }
 
     @Bean
     public OAuthAuthenticationScheme oAuthAuthenticationScheme(LoginConfiguration loginConfiguration,
-                                                        PluginDescriptor pluginDescriptor,
-                                                        ServerPrincipalFactory principalFactory,
-                                                        OAuthClient authClient) {
+                                                               PluginDescriptor pluginDescriptor,
+                                                               ServerPrincipalFactory principalFactory,
+                                                               OAuthClient authClient) {
         OAuthAuthenticationScheme authenticationScheme = new OAuthAuthenticationScheme(pluginDescriptor, principalFactory, authClient);
         loginConfiguration.registerAuthModuleType(authenticationScheme);
         return authenticationScheme;

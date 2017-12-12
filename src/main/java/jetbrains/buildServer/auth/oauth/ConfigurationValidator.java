@@ -30,11 +30,10 @@ public class ConfigurationValidator {
 
     public Collection<String> validate(@NotNull Map<String, String> properties) {
         String preset = properties.get(ConfigKey.preset.toString());
-        presets.getPreset(preset).forEach( (k, v) -> properties.put(k.toString(), v));
+        presets.getPreset(preset).forEach((k, v) -> properties.put(k.toString(), v));
         return EMPTY_KEY_VALUE_MESSAGES.entrySet().stream()
-                .filter(mapping -> StringUtil.isEmptyOrSpaces(properties.get(mapping.getKey().toString())))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toCollection(ArrayList::new));
+                                       .filter(mapping -> StringUtil.isEmptyOrSpaces(properties.get(mapping.getKey().toString())))
+                                       .map(Map.Entry::getValue)
+                                       .collect(Collectors.toCollection(ArrayList::new));
     }
-
 }

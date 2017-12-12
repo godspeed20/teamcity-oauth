@@ -5,7 +5,7 @@ import spock.lang.Unroll
 
 class ConfigurationValidatorTest extends Specification {
 
-    Map<String, String> configuration = [:];
+    Map<String, String> configuration = [:]
 
     def setup() {
         configuration[ConfigKey.authorizeEndpoint.toString()] = 'http://localhost:8080/oauth/authorize'
@@ -18,15 +18,15 @@ class ConfigurationValidatorTest extends Specification {
 
     def "configuration is valid"() {
         expect:
-        new ConfigurationValidator().validate(configuration).isEmpty();
+        new ConfigurationValidator().validate(configuration).isEmpty()
     }
 
     def "configuration is valid if preset define values"() {
         given:
-        configuration[ConfigKey.preset.toString()] = 'github';
+        configuration[ConfigKey.preset.toString()] = 'github'
         configuration.remove(ConfigKey.authorizeEndpoint.toString())
         expect:
-        new ConfigurationValidator().validate(configuration).isEmpty();
+        new ConfigurationValidator().validate(configuration).isEmpty()
     }
 
     @Unroll

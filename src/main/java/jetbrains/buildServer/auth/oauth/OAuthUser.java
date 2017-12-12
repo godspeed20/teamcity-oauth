@@ -5,9 +5,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class OAuthUser {
-    private static final String[] IDS_LIST = new String[]{"login", "username", "id"};
-    private static final String[] NAMES_LIST = new String[]{"name", "display_name"};
-    private static final String[] EMAIL_LIST = new String[]{"email"};
+
+    private static final String[] IDS_LIST = {"login", "username", "id"};
+    private static final String[] NAMES_LIST = {"name", "display_name"};
+    private static final String[] EMAIL_LIST = {"email"};
 
     private final String id;
     private final String name;
@@ -24,9 +25,9 @@ public class OAuthUser {
     }
 
     public OAuthUser(Map userData) {
-        this.id = getValueByKeys(userData, IDS_LIST);
-        this.name = getValueByKeys(userData, NAMES_LIST);
-        this.email = getValueByKeys(userData, EMAIL_LIST);
+        id = getValueByKeys(userData, IDS_LIST);
+        name = getValueByKeys(userData, NAMES_LIST);
+        email = getValueByKeys(userData, EMAIL_LIST);
     }
 
     private String getValueByKeys(Map userData, String[] keys) {
@@ -64,8 +65,10 @@ public class OAuthUser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         OAuthUser oAuthUser = (OAuthUser) o;
         return Objects.equals(id, oAuthUser.id) &&
                 Objects.equals(name, oAuthUser.name) &&

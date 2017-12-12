@@ -19,7 +19,7 @@ public class AuthenticationSchemeProperties {
     public AuthenticationSchemeProperties(@NotNull final SBuildServer sBuildServer, @NotNull final LoginConfiguration loginConfiguration) {
         this.sBuildServer = sBuildServer;
         this.loginConfiguration = loginConfiguration;
-        this.presets = new ConfigPresets();
+        presets = new ConfigPresets();
     }
 
     @Nullable
@@ -77,7 +77,6 @@ public class AuthenticationSchemeProperties {
     private String getProperty(ConfigKey key) {
         Map<String, String> properties = getSchemeProperties();
         return properties == null ? null : properties.get(key.toString());
-
     }
 
     @Nullable
@@ -88,9 +87,10 @@ public class AuthenticationSchemeProperties {
 
     public boolean isAllowInsecureHttps() {
         return Optional.ofNullable(getProperty(ConfigKey.allowInsecureHttps))
-                .map(Boolean::valueOf)
-                .orElse(true);
+                       .map(Boolean::valueOf)
+                       .orElse(true);
     }
+
     // used by JSP loginViaOAuth.jsp
     public boolean isGuestLoginAllowed() {
         return loginConfiguration.isGuestLoginAllowed();

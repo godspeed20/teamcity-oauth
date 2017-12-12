@@ -26,7 +26,7 @@ public class LoginViaOAuthController extends BaseController {
     }
 
     @Override
-    protected ModelAndView doHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws Exception {
+    protected ModelAndView doHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
         if (!schemeProperties.isSchemeConfigured()) {
             return null;
         }
