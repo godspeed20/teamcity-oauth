@@ -48,6 +48,11 @@ public class AuthenticationSchemeProperties {
     }
 
     @Nullable
+    public String getUserRolesEndpoint() {
+        return getPresetProperty(ConfigKey.rolesEndpoint);
+    }
+
+    @Nullable
     public String getClientId() {
         return getProperty(ConfigKey.clientId);
     }
