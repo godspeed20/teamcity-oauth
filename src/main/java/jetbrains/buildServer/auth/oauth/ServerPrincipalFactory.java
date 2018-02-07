@@ -35,7 +35,7 @@ public class ServerPrincipalFactory {
             return Optional.of(new ServerPrincipal(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.getId()));
         } else {
             LOG.info("User: " + user + " could not be found and allowCreatingNewUsersByLogin is disabled");
-            return existingPrincipal;
+            return Optional.empty();
         }
     }
 
