@@ -86,6 +86,10 @@ public class OAuthAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
         if (user.getId() == null) {
             return sendUnauthorizedRequest(request, response, "Unauthenticated since user endpoint does not return any login id");
         }
+
+        Optional<OAuthUserRoles> userRoles = authClient.getUserRoles(user);
+        userRoles.ifPresent(roles -> user.addRoles(roles.getRoles()));
+
         boolean allowCreatingNewUsersByLogin = AuthModuleUtil.allowCreatingNewUsersByLogin(schemeProperties, DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN);
         final Optional<ServerPrincipal> principal = principalFactory.getServerPrincipal(user, allowCreatingNewUsersByLogin);
 
