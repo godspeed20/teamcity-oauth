@@ -110,6 +110,7 @@ class OAuthAuthenticationSchemeTest extends Specification {
         result.principal.name == userName
     }
 
+
     def "authenticate user with roles"() {
         given:
         def userName = "testUser"
