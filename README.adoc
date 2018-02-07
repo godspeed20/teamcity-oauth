@@ -1,4 +1,4 @@
-= teamcity-oauth image:https://api.bintray.com/packages/godspeed20/generic/teamcity-oauth-with-roles/images/download.svg[link="https://bintray.com/godspeed20/generic/teamcity-oauth-with-roles/_latestVersion"]
+= teamcity-oauth image:https://api.bintray.com/packages/godspeed20/teamcity-oauth/teamcity-oauth/images/download.svg[link="https://bintray.com/godspeed20/teamcity-oauth/teamcity-oauth/_latestVersion"]
 
 oAuth2 authentication plugin with optional custom role lookup for custom oAuth2 server
 
@@ -6,7 +6,7 @@ image:./docs/login-screen.png[Login Screen]
 
 = Installation
 
-Grab the latest version of the plugin from image:https://api.bintray.com/packages/godspeed20/generic/teamcity-oauth-with-roles/images/download.svg[link="https://bintray.com/godspeed20/generic/teamcity-oauth-with-roles/_latestVersion"]
+Grab the latest version of the plugin from image:https://api.bintray.com/packages/godspeed20/teamcity-oauth/teamcity-oauth/images/download.svg[link="https://bintray.com/godspeed20/teamcity-oauth/teamcity-oauth/_latestVersion"]
 
 and install it to Teamcity by following these steps: https://confluence.jetbrains.com/display/TCD10/Installing+Additional+Plugins[https://confluence.jetbrains.com/display/TCD10/Installing+Additional+Plugins]
 

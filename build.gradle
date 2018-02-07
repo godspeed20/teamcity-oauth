@@ -58,7 +58,7 @@ teamcity {
             version = project.version
             vendorName = 'godspeed20'
             description = 'TeamCity oAuth2 authentication and authorization Plugin'
-            downloadUrl = 'https://github.com/godspeed20/teamcity-oauth-with-roles/'
+            downloadUrl = 'https://github.com/godspeed20/teamcity-oauth/'
             email = 'rzkd@hotmail.com'
         }
     }
@@ -80,15 +80,15 @@ bintray {
         into '.'
     }
     pkg {
-        repo = 'generic'
-        name = project.name
-        desc = project.name
+        repo = 'teamcity-oauth'
+        name = 'teamcity-oauth'
+        desc = 'TeamCity oAuth2 authentication and authorization Plugin'
         licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/godspeed20/teamcity-oauth-with-roles.git'
+        vcsUrl = 'https://github.com/godspeed20/teamcity-oauth.git'
         labels = ['teamcity', 'oauth']
         publicDownloadNumbers = true
         version {
-            name = project.version
+            name = 'teamcity-oauth-1.1.5'
             desc = 'TeamCity oAuth2 authentication and authorization Plugin'
         }
     }
