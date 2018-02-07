@@ -12,13 +12,14 @@ import javax.servlet.http.HttpServletResponse
 
 class OAuthAuthenticationSchemeTest extends Specification {
 
+    private PluginDescriptor pluginDescriptor = Mock()
+    private UserGroupManager userGroupManager = Mock()
+
     OAuthClient client = Mock()
     HttpServletResponse res = Mock()
     OAuthAuthenticationScheme scheme
 
     def setup() {
-        PluginDescriptor pluginDescriptor = Mock()
-        UserGroupManager userGroupManager = Mock()
         UserFactory principalFactory = Mock() {
             getUser(_, _) >> { OAuthUser user, boolean allow ->
                 if (allow)

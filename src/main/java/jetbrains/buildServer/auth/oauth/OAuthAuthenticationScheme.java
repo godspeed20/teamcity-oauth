@@ -106,6 +106,10 @@ public class OAuthAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
                             if (userGroupByKey == null) userGroupByKey = userGroupManager.createUserGroup(v, v, v);
                             userGroupByKey.addUser(tcUser.get());
                         });
+                        tcUser.get().getUserGroups().forEach(userGroup -> {
+                            if (roles.getRoles().contains(userGroup.getKey())) return;
+                            userGroupManager.findUserGroupByKey(userGroup.getKey()).removeUser(tcUser.get());
+                        });
                     }
             );
 

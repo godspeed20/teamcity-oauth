@@ -15,6 +15,7 @@ class StubUserGroup implements SUserGroup {
     private String description
     private String name
     private String key
+    def removedUsers = []
 
     StubUserGroup(String key, String name, String description) {
         this.key = key
@@ -43,6 +44,7 @@ class StubUserGroup implements SUserGroup {
     }
 
     void removeUser(User user) throws UserGroupException {
+        removedUsers.add(user.username)
 
     }
 

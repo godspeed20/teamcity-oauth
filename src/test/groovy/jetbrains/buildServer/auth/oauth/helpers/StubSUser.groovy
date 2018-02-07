@@ -12,10 +12,19 @@ import jetbrains.buildServer.serverSide.auth.*
 import jetbrains.buildServer.users.*
 import jetbrains.buildServer.vcs.SVcsModification
 
+import java.util.function.Function
+import java.util.stream.Collectors
+
 class StubSUser implements SUser {
     private OAuthUser user
+    private List<String> groups
 
     StubSUser(OAuthUser user) {
+        this(user, new ArrayList<String>())
+    }
+
+    StubSUser(OAuthUser user, List<String> groups) {
+        this.groups = groups
         this.user = user
     }
 
@@ -77,7 +86,11 @@ class StubSUser implements SUser {
     }
 
     List<UserGroup> getUserGroups() {
-        return null
+        return groups.stream().map(new Function<String, UserGroup>() {
+            UserGroup apply(String group) {
+                return new StubUserGroup(group, group, group)
+            }
+        }).collect(Collectors.toList())
     }
 
     List<UserGroup> getAllUserGroups() {
