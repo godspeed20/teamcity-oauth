@@ -25,8 +25,8 @@ public class PluginConfiguration {
     }
 
     @Bean
-    public ServerPrincipalFactory serverPrincipalFactory(UserModel userModel) {
-        return new ServerPrincipalFactory(userModel);
+    public UserFactory serverPrincipalFactory(UserModel userModel) {
+        return new UserFactory(userModel);
     }
 
     @Bean
@@ -48,7 +48,7 @@ public class PluginConfiguration {
     public OAuthAuthenticationScheme oAuthAuthenticationScheme(LoginConfiguration loginConfiguration,
                                                                PluginDescriptor pluginDescriptor,
                                                                UserGroupManager userGroupManager,
-                                                               ServerPrincipalFactory principalFactory,
+                                                               UserFactory principalFactory,
                                                                OAuthClient authClient) {
         OAuthAuthenticationScheme authenticationScheme = new OAuthAuthenticationScheme(pluginDescriptor, principalFactory, userGroupManager, authClient);
         loginConfiguration.registerAuthModuleType(authenticationScheme);

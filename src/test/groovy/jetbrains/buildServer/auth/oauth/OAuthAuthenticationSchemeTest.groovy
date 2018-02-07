@@ -1,8 +1,8 @@
 package jetbrains.buildServer.auth.oauth
 
+import jetbrains.buildServer.auth.oauth.helpers.StubSUser
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationResult
 import jetbrains.buildServer.groups.UserGroupManager
-import jetbrains.buildServer.serverSide.auth.ServerPrincipal
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -19,10 +19,10 @@ class OAuthAuthenticationSchemeTest extends Specification {
     def setup() {
         PluginDescriptor pluginDescriptor = Mock()
         UserGroupManager userGroupManager = Mock()
-        ServerPrincipalFactory principalFactory = Mock() {
-            getServerPrincipal(_, _) >> { OAuthUser user, boolean allow ->
+        UserFactory principalFactory = Mock() {
+            getUser(_, _) >> { OAuthUser user, boolean allow ->
                 if (allow)
-                    Optional.of(new ServerPrincipal(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.id))
+                    Optional.of(new StubSUser(user))
                 else Optional.empty()
             }
         }
@@ -105,25 +105,6 @@ class OAuthAuthenticationSchemeTest extends Specification {
         client.getAccessToken("code") >> "token"
         client.getUserData("token") >> user
         client.getUserRoles(user) >> Optional.empty()
-        when:
-        HttpAuthenticationResult result = scheme.processAuthenticationRequest(req, res, [:])
-        then:
-        result.type == HttpAuthenticationResult.Type.AUTHENTICATED
-        result.principal.name == userName
-    }
-
-    def "authenticate user with roles"() {
-        given:
-        def userName = "testUser"
-        def user = new OAuthUser(userName)
-        HttpServletRequest req = Mock() {
-            getParameter(OAuthAuthenticationScheme.CODE) >> "code"
-            getParameter(OAuthAuthenticationScheme.STATE) >> "state"
-            getRequestedSessionId() >> "state"
-        }
-        client.getAccessToken("code") >> "token"
-        client.getUserData("token") >> user
-        client.getUserRoles(user) >> Optional.of(new OAuthUserRoles([roles: ['role1', 'role2']]))
         when:
         HttpAuthenticationResult result = scheme.processAuthenticationRequest(req, res, [:])
         then:

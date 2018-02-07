@@ -1,8 +1,8 @@
 package jetbrains.buildServer.auth.oauth
 
+import jetbrains.buildServer.auth.oauth.helpers.StubSUser
 import jetbrains.buildServer.auth.oauth.helpers.StubUserGroup
 import jetbrains.buildServer.groups.UserGroupManager
-import jetbrains.buildServer.serverSide.auth.ServerPrincipal
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import spock.lang.Specification
 
@@ -30,10 +30,9 @@ class OAuthUserGroupsTest extends Specification {
                 return new StubUserGroup(key, name, description)
             }
         }
-        ServerPrincipalFactory principalFactory = Mock() {
-            getServerPrincipal(_, _) >> { OAuthUser user, boolean allow ->
-                if (allow)
-                    Optional.of(new ServerPrincipal(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.id))
+        UserFactory principalFactory = Mock() {
+            getUser(_, _) >> { OAuthUser user, boolean allow ->
+                if (allow) Optional.of(new StubSUser(user))
                 else Optional.empty()
             }
         }
