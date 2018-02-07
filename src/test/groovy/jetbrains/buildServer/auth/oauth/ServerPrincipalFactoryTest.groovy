@@ -29,7 +29,6 @@ class ServerPrincipalFactoryTest extends Specification {
         principal.realm == PluginConstants.OAUTH_AUTH_SCHEME_NAME
     }
 
-
     def "create user if model reports null"() {
         given:
         def user = new OAuthUser("testUser", "Test Name", "test@test.com")
