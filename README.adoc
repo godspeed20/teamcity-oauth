@@ -1,6 +1,6 @@
 = teamcity-oauth image:https://api.bintray.com/packages/pwielgolaski/generic/teamcity-oauth/images/download.svg[link="https://bintray.com/pwielgolaski/generic/teamcity-oauth/_latestVersion"]
 
-oAuth2 authentication plugin 
+oAuth2 authentication plugin with optional custom role lookup for custom oauth2 server
 
 image:./docs/login-screen.png[Login Screen]
 
