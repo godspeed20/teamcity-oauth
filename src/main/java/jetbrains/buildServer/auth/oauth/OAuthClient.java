@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class OAuthClient {
 
@@ -66,15 +67,18 @@ public class OAuthClient {
         return new OAuthUser((Map) JSONValue.parse(response));
     }
 
-    public OAuthUserRoles getUserRoles(String username) throws IOException {
-        String rolesUrl = HttpUrl.parse(properties.getUserRolesEndpoint())
+    public Optional<OAuthUserRoles> getUserRoles(OAuthUser user) throws IOException {
+        String userRolesEndpoint = properties.getUserRolesEndpoint();
+        if (ConfigPresets.UNSUPPORTED.equals(userRolesEndpoint)) return Optional.empty();
+
+        String rolesUrl = HttpUrl.parse(userRolesEndpoint)
                 .newBuilder()
-                .addQueryParameter("username", username)
+                .addQueryParameter("username", user.getId())
                 .build().toString();
 
         Request request = new Request.Builder().url(rolesUrl).build();
         String response = getHttpClient().newCall(request).execute().body().string();
         LOG.debug("Fetched user role data: " + response);
-        return new OAuthUserRoles((Map) JSONValue.parse(response));
+        return Optional.of(new OAuthUserRoles((Map) JSONValue.parse(response)));
     }
 }

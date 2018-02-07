@@ -104,7 +104,9 @@ class OAuthClientTest extends Specification {
         def username = 'user123'
         server.enqueue(new MockResponse().setBody(JSONValue.toJSONString([id: 'user123', roles: ['Project1', 'Project7']])))
         expect:
-        client.getUserRoles(username) == new OAuthUserRoles(username, ['Project1', 'Project7'])
+        def userRoles = client.getUserRoles(new OAuthUser(username))
+        userRoles.isPresent() == true
+        userRoles.get().roles == ['Project1', 'Project7']
         def req = server.takeRequest()
         req.method == 'GET'
         req.path == '/roles?username=' + username

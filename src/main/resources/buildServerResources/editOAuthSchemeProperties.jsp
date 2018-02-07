@@ -58,6 +58,11 @@
         <prop:textProperty style="width: 100%;" name="<%=ConfigKey.userEndpoint.toString()%>"/><br/>
         <span class="grayNote">Endpoint at which TeamCity server can obtain information about user</span>
     </div>
+    <div>
+        <label for="<%=ConfigKey.rolesEndpoint%>">OAuth 2.0 user roles endpoint:</label><br/>
+        <prop:textProperty style="width: 100%;" name="<%=ConfigKey.rolesEndpoint.toString()%>"/><br/>
+        <span class="grayNote">Endpoint at which TeamCity server can obtain information about user roles</span>
+    </div>
 </div>
 <div>
     <label for="<%=ConfigKey.clientId%>">Client ID:</label><br/>

@@ -1,11 +1,8 @@
 package jetbrains.buildServer.auth.oauth;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class OAuthUser {
-
     private static final String[] IDS_LIST = {"login", "username", "id"};
     private static final String[] NAMES_LIST = {"name", "display_name"};
     private static final String[] EMAIL_LIST = {"email"};
@@ -13,6 +10,7 @@ public class OAuthUser {
     private final String id;
     private final String name;
     private final String email;
+    private List<String> roles = new ArrayList<>();
 
     public OAuthUser(String id) {
         this(id, null, null);
@@ -55,11 +53,20 @@ public class OAuthUser {
         return email;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void addRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
         return "OAuthUser{" + "id='" + getId() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", email='" + getEmail() + '\'' +
+                ", roles='" + getRoles() + '\'' +
                 '}';
     }
 
@@ -72,11 +79,12 @@ public class OAuthUser {
         OAuthUser oAuthUser = (OAuthUser) o;
         return Objects.equals(id, oAuthUser.id) &&
                 Objects.equals(name, oAuthUser.name) &&
+                Objects.equals(roles, oAuthUser.roles) &&
                 Objects.equals(email, oAuthUser.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email);
+        return Objects.hash(id, name, email, roles);
     }
 }

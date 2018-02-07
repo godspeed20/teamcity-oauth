@@ -93,29 +93,53 @@ class OAuthAuthenticationSchemeTest extends Specification {
 
     def "authenticate user"() {
         given:
+        def userName = "testUser"
+        def user = new OAuthUser(userName)
         HttpServletRequest req = Mock() {
             getParameter(OAuthAuthenticationScheme.CODE) >> "code"
             getParameter(OAuthAuthenticationScheme.STATE) >> "state"
             getRequestedSessionId() >> "state"
         }
         client.getAccessToken("code") >> "token"
-        client.getUserData("token") >> new OAuthUser("testUser")
+        client.getUserData("token") >> user
+        client.getUserRoles(user) >> Optional.empty()
         when:
         HttpAuthenticationResult result = scheme.processAuthenticationRequest(req, res, [:])
         then:
         result.type == HttpAuthenticationResult.Type.AUTHENTICATED
-        result.principal.name == "testUser"
+        result.principal.name == userName
     }
 
-    def "don't authenticate user if allow to create new account is disabled"() {
+    def "authenticate user with roles"() {
         given:
+        def userName = "testUser"
+        def user = new OAuthUser(userName)
         HttpServletRequest req = Mock() {
             getParameter(OAuthAuthenticationScheme.CODE) >> "code"
             getParameter(OAuthAuthenticationScheme.STATE) >> "state"
             getRequestedSessionId() >> "state"
         }
         client.getAccessToken("code") >> "token"
-        client.getUserData("token") >> new OAuthUser("testUser")
+        client.getUserData("token") >> user
+        client.getUserRoles(user) >> Optional.of(new OAuthUserRoles([roles: ['role1', 'role2']]))
+        when:
+        HttpAuthenticationResult result = scheme.processAuthenticationRequest(req, res, [:])
+        then:
+        result.type == HttpAuthenticationResult.Type.AUTHENTICATED
+        result.principal.name == userName
+    }
+
+    def "don't authenticate user if allow to create new account is disabled"() {
+        given:
+        def user = new OAuthUser("testUser")
+        HttpServletRequest req = Mock() {
+            getParameter(OAuthAuthenticationScheme.CODE) >> "code"
+            getParameter(OAuthAuthenticationScheme.STATE) >> "state"
+            getRequestedSessionId() >> "state"
+        }
+        client.getAccessToken("code") >> "token"
+        client.getUserData("token") >> user
+        client.getUserRoles(user) >> Optional.empty()
         when:
         HttpAuthenticationResult result = scheme.processAuthenticationRequest(req, res, [allowCreatingNewUsersByLogin: false])
         then:
