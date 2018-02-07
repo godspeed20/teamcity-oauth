@@ -4,6 +4,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationResult;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationSchemeAdapter;
 import jetbrains.buildServer.controllers.interceptors.auth.util.HttpAuthUtil;
+import jetbrains.buildServer.groups.SUserGroup;
+import jetbrains.buildServer.groups.UserGroupManager;
 import jetbrains.buildServer.serverSide.auth.AuthModuleUtil;
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
@@ -28,13 +30,16 @@ public class OAuthAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
 
     private final PluginDescriptor pluginDescriptor;
     private final ServerPrincipalFactory principalFactory;
+    private final UserGroupManager userGroupManager;
     private final OAuthClient authClient;
 
     public OAuthAuthenticationScheme(@NotNull final PluginDescriptor pluginDescriptor,
                                      @NotNull final ServerPrincipalFactory principalFactory,
+                                     @NotNull final UserGroupManager userGroupManager,
                                      @NotNull final OAuthClient authClient) {
         this.pluginDescriptor = pluginDescriptor;
         this.principalFactory = principalFactory;
+        this.userGroupManager = userGroupManager;
         this.authClient = authClient;
     }
 
@@ -87,16 +92,24 @@ public class OAuthAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
             return sendUnauthorizedRequest(request, response, "Unauthenticated since user endpoint does not return any login id");
         }
 
-        Optional<OAuthUserRoles> userRoles = authClient.getUserRoles(user);
-        userRoles.ifPresent(roles -> user.addRoles(roles.getRoles()));
-
         boolean allowCreatingNewUsersByLogin = AuthModuleUtil.allowCreatingNewUsersByLogin(schemeProperties, DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN);
         final Optional<ServerPrincipal> principal = principalFactory.getServerPrincipal(user, allowCreatingNewUsersByLogin);
 
         if (principal.isPresent()) {
             LOG.debug("Request authenticated. Determined user " + principal.get().getName());
+
+            Optional<OAuthUserRoles> userRoles = authClient.getUserRoles(user);
+            userRoles.ifPresent(roles -> {
+                        roles.getRoles().forEach(v -> {
+                            SUserGroup userGroupByKey = userGroupManager.findUserGroupByKey(v);
+                            if (userGroupByKey == null) userGroupManager.createUserGroup(v, v, v);
+                        });
+                        user.addRoles(roles.getRoles());
+                    }
+            );
+
             return HttpAuthenticationResult.authenticated(principal.get(), true)
-                                           .withRedirect("/");
+                    .withRedirect("/");
         } else {
             return sendUnauthorizedRequest(request, response, "Unauthenticated since user could not be found or created.");
         }

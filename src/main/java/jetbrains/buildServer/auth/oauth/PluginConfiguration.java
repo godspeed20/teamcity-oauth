@@ -1,6 +1,7 @@
 package jetbrains.buildServer.auth.oauth;
 
 import jetbrains.buildServer.controllers.AuthorizationInterceptor;
+import jetbrains.buildServer.groups.UserGroupManager;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
 import jetbrains.buildServer.users.UserModel;
@@ -46,9 +47,10 @@ public class PluginConfiguration {
     @Bean
     public OAuthAuthenticationScheme oAuthAuthenticationScheme(LoginConfiguration loginConfiguration,
                                                                PluginDescriptor pluginDescriptor,
+                                                               UserGroupManager userGroupManager,
                                                                ServerPrincipalFactory principalFactory,
                                                                OAuthClient authClient) {
-        OAuthAuthenticationScheme authenticationScheme = new OAuthAuthenticationScheme(pluginDescriptor, principalFactory, authClient);
+        OAuthAuthenticationScheme authenticationScheme = new OAuthAuthenticationScheme(pluginDescriptor, principalFactory, userGroupManager, authClient);
         loginConfiguration.registerAuthModuleType(authenticationScheme);
         return authenticationScheme;
     }

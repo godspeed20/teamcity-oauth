@@ -1,6 +1,7 @@
 package jetbrains.buildServer.auth.oauth
 
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationResult
+import jetbrains.buildServer.groups.UserGroupManager
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import spock.lang.Specification
@@ -17,6 +18,7 @@ class OAuthAuthenticationSchemeTest extends Specification {
 
     def setup() {
         PluginDescriptor pluginDescriptor = Mock()
+        UserGroupManager userGroupManager = Mock()
         ServerPrincipalFactory principalFactory = Mock() {
             getServerPrincipal(_, _) >> { OAuthUser user, boolean allow ->
                 if (allow)
@@ -24,7 +26,7 @@ class OAuthAuthenticationSchemeTest extends Specification {
                 else Optional.empty()
             }
         }
-        scheme = new OAuthAuthenticationScheme(pluginDescriptor, principalFactory, client)
+        scheme = new OAuthAuthenticationScheme(pluginDescriptor, principalFactory, userGroupManager, client)
     }
 
     @Unroll
@@ -83,7 +85,7 @@ class OAuthAuthenticationSchemeTest extends Specification {
             getRequestedSessionId() >> "state"
         }
         client.getAccessToken("code") >> "token"
-        client.getUserData("token") >> new OAuthUser(null)
+        client.getUserData("token") >> new OAuthUser((String) null)
         when:
         HttpAuthenticationResult result = scheme.processAuthenticationRequest(req, res, [:])
         then:
@@ -109,7 +111,6 @@ class OAuthAuthenticationSchemeTest extends Specification {
         result.type == HttpAuthenticationResult.Type.AUTHENTICATED
         result.principal.name == userName
     }
-
 
     def "authenticate user with roles"() {
         given:
