@@ -43,6 +43,6 @@ Login at your Teamcity host.
 
 = Development
 
-Plugin can be built and deployed by running `gradle deployToTeamcity`
+Plugin can be built and deployed by running `gradlew deployToTeamcity`
 
 Teamcity instance for testing can be setup by using `docker-compose up`
