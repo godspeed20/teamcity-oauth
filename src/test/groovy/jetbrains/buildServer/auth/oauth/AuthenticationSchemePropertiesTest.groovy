@@ -82,6 +82,17 @@ class AuthenticationSchemePropertiesTest extends Specification {
         schemeProperties.getUserEndpoint() == 'https://api.bitbucket.org/2.0/user'
     }
 
+    def "configuration with preset ignores customisations"() {
+        given:
+        configuration[ConfigKey.preset.toString()] = 'bitbucket'
+        configuration[ConfigKey.authorizeEndpoint.toString()] = 'bob'
+        configuration[ConfigKey.tokenEndpoint.toString()] = 'mark'
+        configuration[ConfigKey.userEndpoint.toString()] = 'jacob'
+        expect:
+        schemeProperties.getAuthorizeEndpoint() == 'https://bitbucket.org/site/oauth2/authorize'
+        schemeProperties.getTokenEndpoint() == 'https://bitbucket.org/site/oauth2/access_token'
+        schemeProperties.getUserEndpoint() == 'https://api.bitbucket.org/2.0/user'
+    }
 
     def "configuration is valid for custom preset"() {
         given:
@@ -93,6 +104,13 @@ class AuthenticationSchemePropertiesTest extends Specification {
         schemeProperties.getAuthorizeEndpoint() == 'http://localhost:8080/oauth/authorize'
         schemeProperties.getTokenEndpoint() == 'http://localhost:8080/oauth/token'
         schemeProperties.getUserEndpoint() == 'http://localhost:8080/oauth/user'
+    }
+
+    def "configuration is blank when nothing set"() {
+        expect:
+        schemeProperties.getAuthorizeEndpoint() == null
+        schemeProperties.getTokenEndpoint() == null
+        schemeProperties.getUserEndpoint() == null
     }
 
     def "configuration should favor preset"() {
