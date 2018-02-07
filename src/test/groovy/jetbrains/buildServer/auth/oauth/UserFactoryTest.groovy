@@ -1,45 +1,43 @@
 package jetbrains.buildServer.auth.oauth
 
-import jetbrains.buildServer.serverSide.auth.ServerPrincipal
+import jetbrains.buildServer.auth.oauth.helpers.StubSUser
 import jetbrains.buildServer.users.InvalidUsernameException
 import jetbrains.buildServer.users.SUser
 import jetbrains.buildServer.users.UserModel
 import spock.lang.Specification
 
-class ServerPrincipalFactoryTest extends Specification {
+class UserFactoryTest extends Specification {
 
     UserModel userModel = Mock()
     SUser teamcityUser = Mock()
-    ServerPrincipalFactory principalFactory
+    UserFactory userFactory
 
     def setup() {
-        principalFactory = new ServerPrincipalFactory(userModel)
+        userFactory = new UserFactory(userModel)
     }
 
     def "read user from model"() {
         given:
         def user = new OAuthUser("testUser", "Test Name", "test@test.com")
         this.teamcityUser.getUsername() >> user.id
-        userModel.findUserByUsername(_, _) >> this.teamcityUser
+        userModel.findUserByUsername(_, _) >> new StubSUser(user)
         when:
-        ServerPrincipal principal = principalFactory.getServerPrincipal(user, true).get()
+        SUser principal = userFactory.getUser(user, true).get()
         then:
         principal != null
-        principal.name == user.id
-        principal.realm == PluginConstants.OAUTH_AUTH_SCHEME_NAME
+        principal.username == user.id
     }
 
     def "create user if model reports null"() {
         given:
         def user = new OAuthUser("testUser", "Test Name", "test@test.com")
         userModel.findUserByUsername(_,_) >> null
-        userModel.createUserAccount(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.id) >> teamcityUser
+        userModel.createUserAccount(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.id) >> new StubSUser(user)
         when:
-        ServerPrincipal principal = principalFactory.getServerPrincipal(user, true).get()
+        SUser principal = userFactory.getUser(user, true).get()
         then:
         principal != null
-        principal.name == user.id
-        principal.realm == PluginConstants.OAUTH_AUTH_SCHEME_NAME
+        principal.username == user.id
     }
 
     def "return empty user if model reports null"() {
@@ -47,7 +45,7 @@ class ServerPrincipalFactoryTest extends Specification {
         def user = new OAuthUser("testUser", "Test Name", "test@test.com")
         userModel.findUserByUsername(_,_) >> null
         when:
-        Optional<ServerPrincipal> principal = principalFactory.getServerPrincipal(user, false)
+        Optional<SUser> principal = userFactory.getUser(user, false)
         then:
         !principal.isPresent()
     }
@@ -56,12 +54,11 @@ class ServerPrincipalFactoryTest extends Specification {
         given:
         def user = new OAuthUser("testUser", "Test Name", "test@test.com")
         userModel.findUserByUsername(_,_) >> { throw new InvalidUsernameException("mocked reason") }
-        userModel.createUserAccount(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.id) >> teamcityUser
+        userModel.createUserAccount(PluginConstants.OAUTH_AUTH_SCHEME_NAME, user.id) >> new StubSUser(user)
         when:
-        ServerPrincipal principal = principalFactory.getServerPrincipal(user, true).get()
+        SUser principal = userFactory.getUser(user, true).get()
         then:
         principal != null
-        principal.name == user.id
-        principal.realm == PluginConstants.OAUTH_AUTH_SCHEME_NAME
+        principal.username == user.id
     }
 }

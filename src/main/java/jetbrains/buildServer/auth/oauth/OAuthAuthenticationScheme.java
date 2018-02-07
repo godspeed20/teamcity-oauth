@@ -8,6 +8,7 @@ import jetbrains.buildServer.groups.SUserGroup;
 import jetbrains.buildServer.groups.UserGroupManager;
 import jetbrains.buildServer.serverSide.auth.AuthModuleUtil;
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
+import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -29,12 +30,12 @@ public class OAuthAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     public static final String STATE = "state";
 
     private final PluginDescriptor pluginDescriptor;
-    private final ServerPrincipalFactory principalFactory;
+    private final UserFactory principalFactory;
     private final UserGroupManager userGroupManager;
     private final OAuthClient authClient;
 
     public OAuthAuthenticationScheme(@NotNull final PluginDescriptor pluginDescriptor,
-                                     @NotNull final ServerPrincipalFactory principalFactory,
+                                     @NotNull final UserFactory principalFactory,
                                      @NotNull final UserGroupManager userGroupManager,
                                      @NotNull final OAuthClient authClient) {
         this.pluginDescriptor = pluginDescriptor;
@@ -93,22 +94,23 @@ public class OAuthAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
         }
 
         boolean allowCreatingNewUsersByLogin = AuthModuleUtil.allowCreatingNewUsersByLogin(schemeProperties, DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN);
-        final Optional<ServerPrincipal> principal = principalFactory.getServerPrincipal(user, allowCreatingNewUsersByLogin);
+        final Optional<SUser> tcUser = principalFactory.getUser(user, allowCreatingNewUsersByLogin);
 
-        if (principal.isPresent()) {
-            LOG.debug("Request authenticated. Determined user " + principal.get().getName());
+        if (tcUser.isPresent()) {
+            LOG.debug("Request authenticated. Determined user " + tcUser.get().getName());
 
             Optional<OAuthUserRoles> userRoles = authClient.getUserRoles(user);
             userRoles.ifPresent(roles -> {
                         roles.getRoles().forEach(v -> {
                             SUserGroup userGroupByKey = userGroupManager.findUserGroupByKey(v);
-                            if (userGroupByKey == null) userGroupManager.createUserGroup(v, v, v);
+                            if (userGroupByKey == null) userGroupByKey = userGroupManager.createUserGroup(v, v, v);
+                            userGroupByKey.addUser(tcUser.get());
                         });
-                        user.addRoles(roles.getRoles());
                     }
             );
 
-            return HttpAuthenticationResult.authenticated(principal.get(), true)
+            ServerPrincipal serverPrincipal = new ServerPrincipal(PluginConstants.OAUTH_AUTH_SCHEME_NAME, tcUser.get().getUsername());
+            return HttpAuthenticationResult.authenticated(serverPrincipal, true)
                     .withRedirect("/");
         } else {
             return sendUnauthorizedRequest(request, response, "Unauthenticated since user could not be found or created.");
