@@ -1,12 +1,7 @@
 package jetbrains.buildServer.auth.oauth;
 
 import com.intellij.openapi.util.text.StringUtil;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONValue;
 import org.springframework.http.MediaType;
@@ -69,5 +64,17 @@ public class OAuthClient {
         String response = getHttpClient().newCall(request).execute().body().string();
         LOG.debug("Fetched user data: " + response);
         return new OAuthUser((Map) JSONValue.parse(response));
+    }
+
+    public OAuthUserRoles getUserRoles(String username) throws IOException {
+        String rolesUrl = HttpUrl.parse(properties.getUserRolesEndpoint())
+                .newBuilder()
+                .addQueryParameter("username", username)
+                .build().toString();
+
+        Request request = new Request.Builder().url(rolesUrl).build();
+        String response = getHttpClient().newCall(request).execute().body().string();
+        LOG.debug("Fetched user role data: " + response);
+        return new OAuthUserRoles((Map) JSONValue.parse(response));
     }
 }

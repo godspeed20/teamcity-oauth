@@ -13,6 +13,7 @@ class OAuthClientTest extends Specification {
     public static String AUTHORIZE_URL = ""
     public static String TOKEN_URL = ""
     public static String USER_URL = ""
+    public static String ROLES_URL = ""
     public static final String ROOT_URL = "http://localhost"
     public static final String CLIENT_ID = "myclient"
     public static final String CLIENT_SECRET = "mysecret"
@@ -27,6 +28,7 @@ class OAuthClientTest extends Specification {
         AUTHORIZE_URL = server.url("/auth")
         TOKEN_URL = server.url("/token")
         USER_URL = server.url("/user")
+        ROLES_URL = server.url("/roles")
     }
 
     def cleanupSpec() {
@@ -39,6 +41,7 @@ class OAuthClientTest extends Specification {
             getAuthorizeEndpoint() >> AUTHORIZE_URL
             getTokenEndpoint() >> TOKEN_URL
             getUserEndpoint() >> USER_URL
+            getUserRolesEndpoint() >> ROLES_URL
             getClientId() >> CLIENT_ID
             getClientSecret() >> CLIENT_SECRET
             isAllowInsecureHttps() >> true
@@ -94,5 +97,16 @@ class OAuthClientTest extends Specification {
         req.method == 'GET'
         req.path == '/user'
         req.headers.get('Authorization') == 'Bearer ' + token
+    }
+
+    def "should fetch user roles"() {
+        setup:
+        def username = 'user123'
+        server.enqueue(new MockResponse().setBody(JSONValue.toJSONString([id: 'user123', roles: ['Project1', 'Project7']])))
+        expect:
+        client.getUserRoles(username) == new OAuthUserRoles(username, ['Project1', 'Project7'])
+        def req = server.takeRequest()
+        req.method == 'GET'
+        req.path == '/roles?username=' + username
     }
 }
