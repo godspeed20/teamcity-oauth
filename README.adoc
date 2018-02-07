@@ -1,24 +1,23 @@
 = teamcity-oauth image:https://api.bintray.com/packages/godspeed20/generic/teamcity-oauth-with-roles/images/download.svg[link="https://bintray.com/godspeed20/generic/teamcity-oauth-with-roles/_latestVersion"]
 
-oAuth2 authentication plugin with optional custom role lookup for custom oauth2 server
+oAuth2 authentication plugin with optional custom role lookup for custom oAuth2 server
 
 image:./docs/login-screen.png[Login Screen]
 
 = Installation
 
-Grab latest version of plugin from link image:https://api.bintray.com/packages/godspeed20/generic/teamcity-oauth-with-roles/images/download.svg[link="https://bintray.com/godspeed20/generic/teamcity-oauth-with-roles/_latestVersion"]
+Grab the latest version of the plugin from image:https://api.bintray.com/packages/godspeed20/generic/teamcity-oauth-with-roles/images/download.svg[link="https://bintray.com/godspeed20/generic/teamcity-oauth-with-roles/_latestVersion"]
 
-and install it to Teamcity following https://confluence.jetbrains.com/display/TCD10/Installing+Additional+Plugins[https://confluence.jetbrains.com/display/TCD10/Installing+Additional+Plugins]
+and install it to Teamcity by following these steps: https://confluence.jetbrains.com/display/TCD10/Installing+Additional+Plugins[https://confluence.jetbrains.com/display/TCD10/Installing+Additional+Plugins]
 
 = Configuration
 
-Plugin support authentication using:
+Plugin supports oAuth2 authentication using:
 
 * github
 * bitbucket
 * google
 * custom oAuth server.
-
 
 If you want to use github you need an application to be created https://github.com/settings/applications/new[https://github.com/settings/applications/new]. `Authorization callback URL` should be homepage of TC.
 
@@ -32,11 +31,11 @@ You need to specify your client id and client secret.
 Also you need to specific scope, `user` is fine for github, 'account' for bitbucket.
 
 If you dont choose "Allow creating new users on the first login" only users that already exists in Teamcity can login.
-It means that you need account with the same name as user login name in oauth.
+TC matches user by username (id), so you can interchange between oAuth2 and manual login if needed.
 
 You can decide if you want to hide user/password form on login screen (worth leaving unchecked when you test it).
 
-You can consider to disable also "Allow user registration from the login page" in "Built-in" module.
+You can also consider disabling "Allow user registration from the login page" in "Built-in" module.
 
 Save and test out.
 
@@ -44,6 +43,6 @@ Login at your Teamcity host.
 
 = Development
 
-Plugin can be build and deployed by `gradle deployToTeamcity`
+Plugin can be built and deployed by running `gradle deployToTeamcity`
 
-Teamcity instance for testing can be setup by `docker-compose up`
+Teamcity instance for testing can be setup by using `docker-compose up`
