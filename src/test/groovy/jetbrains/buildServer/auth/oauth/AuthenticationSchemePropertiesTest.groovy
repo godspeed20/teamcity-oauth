@@ -71,6 +71,7 @@ class AuthenticationSchemePropertiesTest extends Specification {
         schemeProperties.getAuthorizeEndpoint() == 'https://github.com/login/oauth/authorize'
         schemeProperties.getTokenEndpoint() == 'https://github.com/login/oauth/access_token'
         schemeProperties.getUserEndpoint() == 'https://api.github.com/user'
+        schemeProperties.getUserRolesEndpoint() == null
     }
 
     def "configuration is valid for bitbucket preset"() {
@@ -80,6 +81,7 @@ class AuthenticationSchemePropertiesTest extends Specification {
         schemeProperties.getAuthorizeEndpoint() == 'https://bitbucket.org/site/oauth2/authorize'
         schemeProperties.getTokenEndpoint() == 'https://bitbucket.org/site/oauth2/access_token'
         schemeProperties.getUserEndpoint() == 'https://api.bitbucket.org/2.0/user'
+        schemeProperties.getUserRolesEndpoint() == null
     }
 
     def "configuration with preset ignores customisations"() {
@@ -100,10 +102,12 @@ class AuthenticationSchemePropertiesTest extends Specification {
         configuration[ConfigKey.authorizeEndpoint.toString()] = 'http://localhost:8080/oauth/authorize'
         configuration[ConfigKey.tokenEndpoint.toString()] = 'http://localhost:8080/oauth/token'
         configuration[ConfigKey.userEndpoint.toString()] = 'http://localhost:8080/oauth/user'
+        configuration[ConfigKey.rolesEndpoint.toString()] = 'http://localhost:8080/oauth/roles'
         expect:
         schemeProperties.getAuthorizeEndpoint() == 'http://localhost:8080/oauth/authorize'
         schemeProperties.getTokenEndpoint() == 'http://localhost:8080/oauth/token'
         schemeProperties.getUserEndpoint() == 'http://localhost:8080/oauth/user'
+        schemeProperties.getUserRolesEndpoint() == 'http://localhost:8080/oauth/roles'
     }
 
     def "configuration is blank when nothing set"() {
@@ -111,6 +115,7 @@ class AuthenticationSchemePropertiesTest extends Specification {
         schemeProperties.getAuthorizeEndpoint() == null
         schemeProperties.getTokenEndpoint() == null
         schemeProperties.getUserEndpoint() == null
+        schemeProperties.getUserRolesEndpoint() == null
     }
 
     def "configuration should favor preset"() {

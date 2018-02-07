@@ -5,6 +5,7 @@ public enum ConfigKey {
     authorizeEndpoint,
     tokenEndpoint,
     userEndpoint,
+    rolesEndpoint,
     clientId,
     clientSecret,
     scope,
