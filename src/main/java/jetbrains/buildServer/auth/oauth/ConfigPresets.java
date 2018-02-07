@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 class ConfigPresets {
+    public static final String UNSUPPORTED = "UNSUPPORTED";
 
     private final Map<String, Map<ConfigKey, String>> presets;
 
@@ -30,6 +31,7 @@ class ConfigPresets {
         preset.put(ConfigKey.authorizeEndpoint, authorizeEndpoint);
         preset.put(ConfigKey.tokenEndpoint, tokenEndpoint);
         preset.put(ConfigKey.userEndpoint, userEndpoint);
+        preset.put(ConfigKey.rolesEndpoint, UNSUPPORTED);
         presets.put(name, preset);
     }
 
