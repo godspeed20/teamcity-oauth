@@ -47,5 +47,4 @@ class ConfigurationValidatorTest extends Specification {
         ConfigKey.clientId          || "Client ID should be specified."
         ConfigKey.clientSecret      || "Client secret should be specified."
     }
-
 }

@@ -9,7 +9,6 @@ import spock.lang.Unroll
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-
 class OAuthAuthenticationSchemeTest extends Specification {
 
     OAuthClient client = Mock()
@@ -27,7 +26,6 @@ class OAuthAuthenticationSchemeTest extends Specification {
         }
         scheme = new OAuthAuthenticationScheme(pluginDescriptor, principalFactory, client)
     }
-
 
     @Unroll
     def "handle as not applicable if state or code is missing"() {
@@ -62,7 +60,6 @@ class OAuthAuthenticationSchemeTest extends Specification {
         result.type == HttpAuthenticationResult.Type.UNAUTHENTICATED
         1 * res.sendError(401, "Unauthenticated since retrieved 'state' doesn't correspond to current TeamCity session.")
     }
-
 
     def "handle as unauthenticated if token is not acquired"() {
         given:
@@ -125,5 +122,4 @@ class OAuthAuthenticationSchemeTest extends Specification {
         result.type == HttpAuthenticationResult.Type.UNAUTHENTICATED
         1 * res.sendError(401, 'Unauthenticated since user could not be found or created.')
     }
-
 }
