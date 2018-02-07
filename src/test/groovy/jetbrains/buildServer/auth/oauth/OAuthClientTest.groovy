@@ -46,7 +46,6 @@ class OAuthClientTest extends Specification {
         client = new OAuthClient(schemeProperties)
     }
 
-
     def "should generate redirect url"() {
         setup:
         schemeProperties.getScope() >> scope
