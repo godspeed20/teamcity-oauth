@@ -71,7 +71,7 @@ class AuthenticationSchemePropertiesTest extends Specification {
         schemeProperties.getAuthorizeEndpoint() == 'https://github.com/login/oauth/authorize'
         schemeProperties.getTokenEndpoint() == 'https://github.com/login/oauth/access_token'
         schemeProperties.getUserEndpoint() == 'https://api.github.com/user'
-        schemeProperties.getUserRolesEndpoint() == null
+        schemeProperties.getUserRolesEndpoint() == ConfigPresets.UNSUPPORTED
     }
 
     def "configuration is valid for bitbucket preset"() {
@@ -81,7 +81,17 @@ class AuthenticationSchemePropertiesTest extends Specification {
         schemeProperties.getAuthorizeEndpoint() == 'https://bitbucket.org/site/oauth2/authorize'
         schemeProperties.getTokenEndpoint() == 'https://bitbucket.org/site/oauth2/access_token'
         schemeProperties.getUserEndpoint() == 'https://api.bitbucket.org/2.0/user'
-        schemeProperties.getUserRolesEndpoint() == null
+        schemeProperties.getUserRolesEndpoint() == ConfigPresets.UNSUPPORTED
+    }
+
+    def "configuration is valid for google preset"() {
+        given:
+        configuration[ConfigKey.preset.toString()] = 'google'
+        expect:
+        schemeProperties.getAuthorizeEndpoint() == 'https://accounts.google.com/o/oauth2/v2/auth'
+        schemeProperties.getTokenEndpoint() == 'https://www.googleapis.com/oauth2/v4/token'
+        schemeProperties.getUserEndpoint() == 'https://www.googleapis.com/oauth2/v3/userinfo'
+        schemeProperties.getUserRolesEndpoint() == ConfigPresets.UNSUPPORTED
     }
 
     def "configuration with preset ignores customisations"() {
@@ -90,10 +100,12 @@ class AuthenticationSchemePropertiesTest extends Specification {
         configuration[ConfigKey.authorizeEndpoint.toString()] = 'bob'
         configuration[ConfigKey.tokenEndpoint.toString()] = 'mark'
         configuration[ConfigKey.userEndpoint.toString()] = 'jacob'
+        configuration[ConfigKey.rolesEndpoint.toString()] = 'ringo'
         expect:
         schemeProperties.getAuthorizeEndpoint() == 'https://bitbucket.org/site/oauth2/authorize'
         schemeProperties.getTokenEndpoint() == 'https://bitbucket.org/site/oauth2/access_token'
         schemeProperties.getUserEndpoint() == 'https://api.bitbucket.org/2.0/user'
+        schemeProperties.getUserRolesEndpoint() == ConfigPresets.UNSUPPORTED
     }
 
     def "configuration is valid for custom preset"() {
