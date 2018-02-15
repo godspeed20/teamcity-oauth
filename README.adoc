@@ -37,9 +37,9 @@ You can decide if you want to hide user/password form on login screen (worth lea
 
 You can also consider disabling "Allow user registration from the login page" in "Built-in" module.
 
-Save and test out.
+Save and test.
 
-Login at your Teamcity host.
+Login to your Teamcity host.
 
 = Development
 
